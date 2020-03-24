@@ -16,14 +16,6 @@ import { IS_IOS, LAST_FETCH_TS } from '../constants/Constants';
 
 const haversine = require('haversine');
 
-export const startForegroundTimer = async () => {
-  await checkSickPeople();
-
-  BackgroundTimer.runBackgroundTimer(async () => {
-    await checkSickPeople();
-  }, config().sampleInterval);
-};
-
 const checkMillisecondsDiff = (to: number, from: number) => {
   return to - from > config().intersectMilliseconds;
 };
@@ -31,25 +23,25 @@ const checkMillisecondsDiff = (to: number, from: number) => {
 export const isTimeOverlapping = (userRecord: any, sickRecord: any) => {
   // End time in the range
   return (
-    (userRecord.endTime > sickRecord.properties.fromTime
-      && userRecord.endTime < sickRecord.properties.toTime
-      && checkMillisecondsDiff(
+    (userRecord.endTime > sickRecord.properties.fromTime &&
+      userRecord.endTime < sickRecord.properties.toTime &&
+      checkMillisecondsDiff(
         userRecord.endTime,
-        Math.max(sickRecord.properties.fromTime, userRecord.startTime),
-      ))
+        Math.max(sickRecord.properties.fromTime, userRecord.startTime)
+      )) ||
     // in the range
-    || (userRecord.startTime < sickRecord.properties.fromTime
-      && userRecord.endTime > sickRecord.properties.toTime
-      && checkMillisecondsDiff(
+    (userRecord.startTime < sickRecord.properties.fromTime &&
+      userRecord.endTime > sickRecord.properties.toTime &&
+      checkMillisecondsDiff(
         sickRecord.properties.toTime,
-        sickRecord.properties.fromTime,
-      ))
+        sickRecord.properties.fromTime
+      )) ||
     // Start time in the range
-    || (userRecord.startTime > sickRecord.properties.fromTime
-      && userRecord.startTime < sickRecord.properties.toTime
-      && checkMillisecondsDiff(
+    (userRecord.startTime > sickRecord.properties.fromTime &&
+      userRecord.startTime < sickRecord.properties.toTime &&
+      checkMillisecondsDiff(
         Math.min(sickRecord.properties.toTime, userRecord.endTime),
-        userRecord.startTime,
+        userRecord.startTime
       ))
   );
 };
@@ -65,12 +57,15 @@ export const isSpaceOverlapping = (userRecord: any, sickRecord: any) => {
     longitude: sickRecord.geometry.coordinates[config().sickGeometryLongIndex],
   };
 
-  return haversine(start, end, { threshold: config().meterRadius, unit: config().bufferUnits });
+  return haversine(start, end, {
+    threshold: config().meterRadius,
+    unit: config().bufferUnits,
+  });
 };
 
 export const getIntersectingSickRecords = (
   myData: any,
-  sickRecordsJson: any,
+  sickRecordsJson: any
 ) => {
   const sickPeopleIntersected: any = [];
 
@@ -82,8 +77,8 @@ export const getIntersectingSickRecords = (
       // for each raw in user data
       myData.forEach((userRecord: any) => {
         if (
-          isTimeOverlapping(userRecord, sickRecord)
-          && isSpaceOverlapping(userRecord, sickRecord)
+          isTimeOverlapping(userRecord, sickRecord) &&
+          isSpaceOverlapping(userRecord, sickRecord)
         ) {
           // add sick people you intersects
           sickPeopleIntersected.push(sickRecord);
@@ -93,40 +88,6 @@ export const getIntersectingSickRecords = (
   }
 
   return sickPeopleIntersected;
-};
-
-export const checkSickPeople = async () => {
-  const lastFetch = JSON.parse(
-    (await AsyncStorage.getItem(LAST_FETCH_TS)) || '0',
-  );
-
-  // prevent excessive calls to checkSickPeople
-  if (lastFetch && moment().valueOf() - lastFetch < config().fetchMilliseconds) {
-    return;
-  }
-
-  fetch(config().dataUrl, { headers: { 'Content-Type': 'application/json;charset=utf-8' } })
-    .then(response => response.json())
-    .then(async (responseJson) => {
-      const myData = await queryDB();
-
-      const sickPeopleIntersected: any = getIntersectingSickRecords(
-        myData,
-        responseJson,
-      );
-
-      if (sickPeopleIntersected.length > 0) {
-        await onSickPeopleNotify(sickPeopleIntersected);
-      }
-
-      await AsyncStorage.setItem(
-        LAST_FETCH_TS,
-        JSON.stringify(moment().valueOf()),
-      );
-    })
-    .catch((error) => {
-      onError(error);
-    });
 };
 
 export const queryDB = async () => {
@@ -140,9 +101,10 @@ export const onSickPeopleNotify = async (sickPeopleIntersected: Exposure[]) => {
 
   const exposuresToUpdate = [];
 
-  for (const currSick of sickPeopleIntersected) {
+  for (let i = 0; i < sickPeopleIntersected.length; i += 1) {
+    const currSick = sickPeopleIntersected[i];
     const queryResult = await dbSick.containsObjectID(
-      currSick.properties.OBJECTID,
+      currSick.properties.OBJECTID
     );
 
     if (!queryResult) {
@@ -162,11 +124,59 @@ export const onSickPeopleNotify = async (sickPeopleIntersected: Exposure[]) => {
     locale = 'he';
   }
 
-  exposuresToUpdate.length > 0
-    && (await registerLocalNotification(
+  if (exposuresToUpdate.length > 0) {
+    await registerLocalNotification(
       config().sickMessage[locale].title,
       config().sickMessage[locale].body,
       config().sickMessage.duration,
-      'ms',
-    ));
+      'ms'
+    );
+  }
+};
+
+export const checkSickPeople = async () => {
+  const lastFetch = JSON.parse(
+    (await AsyncStorage.getItem(LAST_FETCH_TS)) || '0'
+  );
+
+  // prevent excessive calls to checkSickPeople
+  if (
+    lastFetch &&
+    moment().valueOf() - lastFetch < config().fetchMilliseconds
+  ) {
+    return;
+  }
+
+  fetch(config().dataUrl, {
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  })
+    .then((response) => response.json())
+    .then(async (responseJson) => {
+      const myData = await queryDB();
+
+      const sickPeopleIntersected: any = getIntersectingSickRecords(
+        myData,
+        responseJson
+      );
+
+      if (sickPeopleIntersected.length > 0) {
+        await onSickPeopleNotify(sickPeopleIntersected);
+      }
+
+      await AsyncStorage.setItem(
+        LAST_FETCH_TS,
+        JSON.stringify(moment().valueOf())
+      );
+    })
+    .catch((error) => {
+      onError(error);
+    });
+};
+
+export const startForegroundTimer = async () => {
+  await checkSickPeople();
+
+  BackgroundTimer.runBackgroundTimer(async () => {
+    await checkSickPeople();
+  }, config().sampleInterval);
 };

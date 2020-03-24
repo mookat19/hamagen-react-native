@@ -16,11 +16,15 @@ export default function () {
     ...offlineConfig,
     rehydrate: true,
     persistOptions: {
-      whitelist: []
-    }
+      whitelist: [],
+    },
   };
 
-  storeInstance = createStore(reducers, {}, compose(applyMiddleware(thunkMiddleware), offline(configOffline)));
+  storeInstance = createStore(
+    reducers,
+    {},
+    compose(applyMiddleware(thunkMiddleware), offline(configOffline))
+  );
 
   return storeInstance;
 }

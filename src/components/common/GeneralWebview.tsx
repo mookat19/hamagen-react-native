@@ -3,16 +3,26 @@ import { View, StyleSheet, Modal, ImageBackground } from 'react-native';
 import WebView from 'react-native-webview';
 import { TouchableOpacity, Icon } from '.';
 import config from '../../config/config';
-import { PADDING_TOP, SCREEN_HEIGHT, SCREEN_WIDTH, USAGE_PRIVACY } from '../../constants/Constants';
+import {
+  PADDING_TOP,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  USAGE_PRIVACY,
+} from '../../constants/Constants';
 
 interface Props {
-  isVisible: boolean,
-  locale: 'he'|'en'|'ar'|'am'|'ru',
-  usageType: string,
-  closeWebview(): void
+  isVisible: boolean;
+  locale: 'he' | 'en' | 'ar' | 'am' | 'ru';
+  usageType: string;
+  closeWebview(): void;
 }
 
-const GeneralWebview = ({ isVisible, locale, closeWebview, usageType }: Props) => {
+const GeneralWebview = ({
+  isVisible,
+  locale,
+  closeWebview,
+  usageType,
+}: Props) => {
   const usageSourceOnBoarding = config().usageTerms;
   const usageSourcePrivacy = config().privacyTerms;
 
@@ -21,17 +31,18 @@ const GeneralWebview = ({ isVisible, locale, closeWebview, usageType }: Props) =
       visible={isVisible}
       transparent
       animationType="slide"
-      onRequestClose={closeWebview}
-    >
+      onRequestClose={closeWebview}>
       <View style={styles.container}>
         <ImageBackground
           source={require('../../assets/main/headerBG.png')}
           style={styles.headerContainer}
           resizeMode="cover"
-          resizeMethod="resize"
-        >
+          resizeMethod="resize">
           <TouchableOpacity style={styles.close} onPress={closeWebview}>
-            <Icon source={require('../../assets/onboarding/close.png')} width={31} />
+            <Icon
+              source={require('../../assets/onboarding/close.png')}
+              width={31}
+            />
           </TouchableOpacity>
 
           <View style={styles.headerSubContainer} />
@@ -39,7 +50,12 @@ const GeneralWebview = ({ isVisible, locale, closeWebview, usageType }: Props) =
 
         <WebView
           style={{ flex: 1 }}
-          source={{ uri: usageType === USAGE_PRIVACY ? usageSourcePrivacy[locale] : usageSourceOnBoarding[locale] }}
+          source={{
+            uri:
+              usageType === USAGE_PRIVACY
+                ? usageSourcePrivacy[locale]
+                : usageSourceOnBoarding[locale],
+          }}
           startInLoadingState
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -54,20 +70,20 @@ const GeneralWebview = ({ isVisible, locale, closeWebview, usageType }: Props) =
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   close: {
     position: 'absolute',
     top: PADDING_TOP(20),
     left: 20,
-    zIndex: 1000
+    zIndex: 1000,
   },
   headerContainer: {
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT * 0.17,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingTop: PADDING_TOP(0)
+    paddingTop: PADDING_TOP(0),
   },
   headerSubContainer: {
     width: SCREEN_WIDTH,
@@ -79,8 +95,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    backgroundColor: '#fff'
-  }
+    backgroundColor: '#fff',
+  },
 });
 
 export { GeneralWebview };

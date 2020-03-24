@@ -4,16 +4,16 @@ import {
   TOGGLE_WEBVIEW,
   SHOW_FORCE_UPDATE,
   SHOW_FORCE_TERMS,
-  HIDE_FORCE_TERMS
+  HIDE_FORCE_TERMS,
 } from '../constants/ActionTypes';
 import { USAGE_PRIVACY } from '../constants/Constants';
 
 interface GeneralReducer {
-  showLoader: boolean,
-  showWebview: boolean,
-  showForceUpdate: boolean,
-  showForceTerms: boolean,
-  termsVersion: number
+  showLoader: boolean;
+  showWebview: boolean;
+  showForceUpdate: boolean;
+  showForceTerms: boolean;
+  termsVersion: number;
 }
 
 const INITIAL_STATE = {
@@ -22,10 +22,13 @@ const INITIAL_STATE = {
   showForceUpdate: false,
   showForceTerms: false,
   usageType: USAGE_PRIVACY,
-  termsVersion: 0
+  termsVersion: 0,
 };
 
-export default (state: GeneralReducer = INITIAL_STATE, action: ReducerAction) => {
+export default (
+  state: GeneralReducer = INITIAL_STATE,
+  action: ReducerAction
+) => {
   switch (action.type) {
     case TOGGLE_LOADER: {
       const { isShow } = action.payload;
@@ -43,7 +46,11 @@ export default (state: GeneralReducer = INITIAL_STATE, action: ReducerAction) =>
 
     case SHOW_FORCE_TERMS: {
       const { terms } = action.payload;
-      return { ...state, showForceTerms: true, termsVersion: terms || state.termsVersion };
+      return {
+        ...state,
+        showForceTerms: true,
+        termsVersion: terms || state.termsVersion,
+      };
     }
 
     case HIDE_FORCE_TERMS: {

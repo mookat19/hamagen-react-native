@@ -4,13 +4,13 @@ import { Fonts } from '../../types';
 import { TEXT_COLOR } from '../../constants/Constants';
 
 interface Props extends TextProps {
-  style?: TextStyle,
-  locale: 'he'|'en'|'ar'|'am'|'ru',
-  reference?: MutableRefObject<any>,
-  children?: ReactNode,
-  bold?: boolean,
-  black?: boolean,
-  light?: boolean
+  style?: TextStyle;
+  locale: 'he' | 'en' | 'ar' | 'am' | 'ru';
+  reference?: MutableRefObject<any>;
+  children?: ReactNode;
+  bold?: boolean;
+  black?: boolean;
+  light?: boolean;
 }
 
 const Text: ElementType = (props: Props) => {
@@ -18,11 +18,21 @@ const Text: ElementType = (props: Props) => {
 
   // TODO add fonts when relevant
   const fonts: Fonts = {
-    'he-IL': bold ? 'SimplerPro_V3-Bold' : (black ? 'SimplerPro_V3-Black' : (light ? 'SimplerPro_V3-Light' : 'SimplerPro_V3-Regular'))
+    'he-IL': bold
+      ? 'SimplerPro_V3-Bold'
+      : black
+      ? 'SimplerPro_V3-Black'
+      : light
+      ? 'SimplerPro_V3-Light'
+      : 'SimplerPro_V3-Regular',
   };
 
   return (
-    <RNText {...props} ref={reference} style={[styles.text, { fontFamily: fonts[locale || 'he-IL'] }, style]} allowFontScaling={false}>
+    <RNText
+      {...props}
+      ref={reference}
+      style={[styles.text, { fontFamily: fonts[locale || 'he-IL'] }, style]}
+      allowFontScaling={false}>
       {children}
     </RNText>
   );
@@ -33,8 +43,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textAlign: 'center',
     fontSize: 16,
-    color: TEXT_COLOR
-  }
+    color: TEXT_COLOR,
+  },
 });
 
 export { Text };

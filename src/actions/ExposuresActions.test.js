@@ -8,7 +8,6 @@ import { Exposure } from '../types';
 
 const mockStore = configureMockStore([thunk]);
 
-
 describe('ExposuresActions', () => {
   test('setExposures()', async () => {
     const sickRecord: Exposure = {
@@ -31,18 +30,23 @@ describe('ExposuresActions', () => {
           type: 'Point',
           coordinates: [34.61261540000004, 31.31095400000004],
         }, // Ofakim
-      }
+      },
     ];
     const expectedActions = [
       { type: actionTypes.UPDATE_EXPOSURES, payload: { exposures } },
-      { type: actionTypes.UPDATE_PAST_EXPOSURES, payload: { pastExposures: exposures } }
+      {
+        type: actionTypes.UPDATE_PAST_EXPOSURES,
+        payload: { pastExposures: exposures },
+      },
     ];
     await AsyncStorage.setItem(constants.DISMISSED_EXPOSURES, '[1]');
     const store = mockStore({});
-    return store.dispatch(ExposuresActions.setExposures([sickRecord])).then(() => {
-      const actions = store.getActions();
-      expect(actions).toEqual(expectedActions);
-    });
+    return store
+      .dispatch(ExposuresActions.setExposures([sickRecord]))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual(expectedActions);
+      });
   });
 
   test('setValidExposure()', async () => {
@@ -54,10 +58,13 @@ describe('ExposuresActions', () => {
       geometry: {
         type: 'Point',
         coordinates: [34.61261540000004, 31.31095400000004],
-      }
+      },
     };
     const expectedActions = [
-      { type: actionTypes.SET_VALID_EXPOSURE, payload: { validExposure: sickExposure } },
+      {
+        type: actionTypes.SET_VALID_EXPOSURE,
+        payload: { validExposure: sickExposure },
+      },
     ];
     const store = mockStore({});
     store.dispatch(ExposuresActions.setValidExposure(sickExposure)).then(() => {
@@ -67,9 +74,7 @@ describe('ExposuresActions', () => {
   });
 
   test('removeValidExposure()', async () => {
-    const expectedActions = [
-      { type: actionTypes.REMOVE_VALID_EXPOSURE },
-    ];
+    const expectedActions = [{ type: actionTypes.REMOVE_VALID_EXPOSURE }];
     const store = mockStore({});
     return store.dispatch(ExposuresActions.removeValidExposure()).then(() => {
       const actions = store.getActions();

@@ -7,28 +7,37 @@ import {
   SET_VALID_EXPOSURE,
   UPDATE_EXPOSURES,
   UPDATE_PAST_EXPOSURES,
-  UPDATE_FIRST_POINT
+  UPDATE_FIRST_POINT,
 } from '../constants/ActionTypes';
 
 interface ExposuresReducer {
-  exposures: Exposure[],
-  pastExposures: Exposure[],
-  validExposure?: Exposure,
-  firstPoint?: number
+  exposures: Exposure[];
+  pastExposures: Exposure[];
+  validExposure?: Exposure;
+  firstPoint?: number;
 }
 
 const INITIAL_STATE = {
   exposures: [],
   pastExposures: [],
   validExposure: undefined,
-  firstPoint: undefined
+  firstPoint: undefined,
 };
 
-export default (state: ExposuresReducer = INITIAL_STATE, action: ReducerAction) => {
+export default (
+  state: ExposuresReducer = INITIAL_STATE,
+  action: ReducerAction
+) => {
   switch (action.type) {
     case UPDATE_EXPOSURES: {
       const { exposures } = action.payload;
-      return { ...state, exposures: _.sortBy([...state.exposures, ...exposures], exposure => exposure.properties.fromTime).reverse() };
+      return {
+        ...state,
+        exposures: _.sortBy(
+          [...state.exposures, ...exposures],
+          (exposure) => exposure.properties.fromTime
+        ).reverse(),
+      };
     }
 
     case SET_VALID_EXPOSURE: {
@@ -42,12 +51,20 @@ export default (state: ExposuresReducer = INITIAL_STATE, action: ReducerAction) 
 
     case UPDATE_PAST_EXPOSURES: {
       const { pastExposures } = action.payload;
-      return { ...state, pastExposures: [...state.pastExposures, ...pastExposures] };
+      return {
+        ...state,
+        pastExposures: [...state.pastExposures, ...pastExposures],
+      };
     }
 
     case DISMISS_EXPOSURE: {
       const { exposureId } = action.payload;
-      return { ...state, exposures: state.exposures.filter(exposure => exposure.properties.OBJECTID !== exposureId) };
+      return {
+        ...state,
+        exposures: state.exposures.filter(
+          (exposure) => exposure.properties.OBJECTID !== exposureId
+        ),
+      };
     }
 
     case RESET_EXPOSURES: {

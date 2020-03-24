@@ -1,9 +1,13 @@
 import React from 'react';
 import { StyleSheet, Modal, View, ActivityIndicator } from 'react-native';
-import { BACK_DROP_COLOR, SCREEN_HEIGHT, SCREEN_WIDTH } from '../../constants/Constants';
+import {
+  BACK_DROP_COLOR,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+} from '../../constants/Constants';
 
 interface Props {
-  isVisible: boolean
+  isVisible: boolean;
 }
 
 const Loader = ({ isVisible }: Props) => {
@@ -12,8 +16,7 @@ const Loader = ({ isVisible }: Props) => {
       visible={isVisible}
       animationType="fade"
       transparent
-      onRequestClose={() => {}}
-    >
+      onRequestClose={() => {}}>
       <View style={styles.backdrop}>
         <ActivityIndicator size="large" />
       </View>
@@ -27,8 +30,8 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: BACK_DROP_COLOR
-  }
+    backgroundColor: BACK_DROP_COLOR,
+  },
 });
 
 export { Loader };

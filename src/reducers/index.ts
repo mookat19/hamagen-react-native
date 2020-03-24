@@ -6,5 +6,5 @@ import ExposuresReducer from './ExposuresReducer';
 export default combineReducers({
   general: GeneralReducer,
   locale: LocaleReducer,
-  exposures: ExposuresReducer
+  exposures: ExposuresReducer,
 });

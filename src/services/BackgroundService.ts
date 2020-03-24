@@ -11,7 +11,7 @@ export const scheduleTask = async () => {
         // Android options
         stopOnTerminate: false,
         startOnBoot: true,
-        enableHeadless: true
+        enableHeadless: true,
       },
       async () => {
         console.log('Background fetch event fired');

@@ -6,12 +6,18 @@ import { Icon, TouchableOpacity, Text } from '.';
 import { toggleChangeLanguage } from '../../actions/LocaleActions';
 
 interface Props {
-  strings: any,
-  locale: 'he'|'en'|'ar'|'am'|'ru',
-  toggleChangeLanguage(isShow: boolean): void
+  strings: any;
+  locale: 'he' | 'en' | 'ar' | 'am' | 'ru';
+  toggleChangeLanguage(isShow: boolean): void;
 }
 
-let ChangeLanguageButton: ElementType = ({ locale, strings: { languages: { short } }, toggleChangeLanguage }: Props) => {
+let ChangeLanguageButton: ElementType = ({
+  locale,
+  strings: {
+    languages: { short },
+  },
+  toggleChangeLanguage,
+}: Props) => {
   return (
     <TouchableOpacity onPress={() => toggleChangeLanguage(true)}>
       <View style={styles.container}>
@@ -27,28 +33,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   text: {
     fontSize: 17,
-    marginRight: 5
-  }
+    marginRight: 5,
+  },
 });
 
 const mapStateToProps = (state: any) => {
   const {
-    locale: { strings, locale }
+    locale: { strings, locale },
   } = state;
 
   return { strings, locale };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-  return bindActionCreators({
-    toggleChangeLanguage
-  }, dispatch);
+  return bindActionCreators(
+    {
+      toggleChangeLanguage,
+    },
+    dispatch
+  );
 };
 
-ChangeLanguageButton = connect(mapStateToProps, mapDispatchToProps)(ChangeLanguageButton);
+ChangeLanguageButton = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChangeLanguageButton);
 
 export { ChangeLanguageButton };

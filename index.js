@@ -13,7 +13,8 @@ BackgroundGeolocation.onLocation(
   async (location) => {
     location.timestamp = moment(location.timestamp).valueOf();
     await insertDB(location);
-  }, (error) => {
+  },
+  (error) => {
     onError({ error });
   }
 );

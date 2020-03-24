@@ -8,14 +8,26 @@ export const HIT_SLOP: Insets = { top: 10, bottom: 10, left: 10, right: 10 };
 export const VERSION_NAME: string = DeviceInfo.getVersion();
 
 // Dimensions
-const isIPhoneXSize: boolean = Dimensions.get('window').height === 812 || Dimensions.get('window').width === 812;
-const isIPhoneXrSize: boolean = Dimensions.get('window').height === 896 || Dimensions.get('window').width === 896;
-export const IS_IPHONE_X: boolean = Platform.OS === 'ios' && (isIPhoneXSize || isIPhoneXrSize);
+const isIPhoneXSize: boolean =
+  Dimensions.get('window').height === 812 ||
+  Dimensions.get('window').width === 812;
+const isIPhoneXrSize: boolean =
+  Dimensions.get('window').height === 896 ||
+  Dimensions.get('window').width === 896;
+export const IS_IPHONE_X: boolean =
+  Platform.OS === 'ios' && (isIPhoneXSize || isIPhoneXrSize);
 
-export const SCREEN_HEIGHT: number = Platform.OS === 'ios' ? Dimensions.get('window').height : ExtraDimensions.get('REAL_WINDOW_HEIGHT') - ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT') - ExtraDimensions.get('STATUS_BAR_HEIGHT');
+export const SCREEN_HEIGHT: number =
+  Platform.OS === 'ios'
+    ? Dimensions.get('window').height
+    : ExtraDimensions.get('REAL_WINDOW_HEIGHT') -
+      ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT') -
+      ExtraDimensions.get('STATUS_BAR_HEIGHT');
 export const SCREEN_WIDTH: number = Dimensions.get('window').width;
-export const PADDING_TOP = (padBy: number): number => padBy + (IS_IOS ? (IS_IPHONE_X ? 32 : 20) : 0);
-export const PADDING_BOTTOM = (padBy: number): number => padBy + (IS_IPHONE_X ? 15 : 0);
+export const PADDING_TOP = (padBy: number): number =>
+  padBy + (IS_IOS ? (IS_IPHONE_X ? 32 : 20) : 0);
+export const PADDING_BOTTOM = (padBy: number): number =>
+  padBy + (IS_IPHONE_X ? 15 : 0);
 
 // Colors
 export const MAIN_COLOR = '#0077c8';
@@ -29,7 +41,7 @@ export const BASIC_SHADOW_STYLES = {
   shadowOpacity: 0.15,
   shadowRadius: 5,
   elevation: 5,
-  backgroundColor: '#fff'
+  backgroundColor: '#fff',
 };
 
 // Keys

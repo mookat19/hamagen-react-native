@@ -5,7 +5,6 @@ import * as tracker from './Tracker';
 import * as db from '../database/Database';
 import * as constants from '../constants/Constants';
 
-
 const sickPeople = {
   geometry: {
     type: 'Point',
@@ -44,105 +43,125 @@ describe('Tracker', () => {
     expect(
       tracker.isTimeOverlapping(
         { startTime: 1 * 60 * 60 * 1000, endTime: 2 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(false);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 1 * 60 * 60 * 1000, endTime: 12 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(true);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 1 * 60 * 60 * 1000, endTime: 22 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(true);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 11 * 60 * 60 * 1000, endTime: 12 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(true);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 11 * 60 * 60 * 1000, endTime: 22 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(true);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 21 * 60 * 60 * 1000, endTime: 22 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(false);
     // //Check the 15 mins overlapping restriction
     expect(
       tracker.isTimeOverlapping(
         { startTime: 1 * 60 * 60 * 1000, endTime: 10.1 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(false);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 1 * 60 * 60 * 1000, endTime: 10.3 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(true);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 11 * 60 * 60 * 1000, endTime: 11.1 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(false);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 11 * 60 * 60 * 1000, endTime: 11.3 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(true);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 19.9 * 60 * 60 * 1000, endTime: 22 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(false);
     expect(
       tracker.isTimeOverlapping(
         { startTime: 19.7 * 60 * 60 * 1000, endTime: 22 * 60 * 60 * 1000 },
-        sickRecord,
-      ),
+        sickRecord
+      )
     ).toBe(true);
   });
 
   test('unitTestGeography()', async () => {
     // South
     expect(
-      tracker.isSpaceOverlapping({ long: 34.612383, lat: 31.307915 }, sickRecord),
+      tracker.isSpaceOverlapping(
+        { long: 34.612383, lat: 31.307915 },
+        sickRecord
+      )
     ).toBe(true);
     expect(
-      tracker.isSpaceOverlapping({ long: 34.612645, lat: 31.305848 }, sickRecord),
+      tracker.isSpaceOverlapping(
+        { long: 34.612645, lat: 31.305848 },
+        sickRecord
+      )
     ).toBe(false);
     // West
     expect(
-      tracker.isSpaceOverlapping({ long: 34.609032, lat: 31.311498 }, sickRecord),
+      tracker.isSpaceOverlapping(
+        { long: 34.609032, lat: 31.311498 },
+        sickRecord
+      )
     ).toBe(true);
     expect(
-      tracker.isSpaceOverlapping({ long: 34.604462, lat: 31.311608 }, sickRecord),
+      tracker.isSpaceOverlapping(
+        { long: 34.604462, lat: 31.311608 },
+        sickRecord
+      )
     ).toBe(false);
     // North-East
     expect(
-      tracker.isSpaceOverlapping({ long: 34.615315, lat: 31.312473 }, sickRecord),
+      tracker.isSpaceOverlapping(
+        { long: 34.615315, lat: 31.312473 },
+        sickRecord
+      )
     ).toBe(true);
     expect(
-      tracker.isSpaceOverlapping({ long: 34.618952, lat: 31.314902 }, sickRecord),
+      tracker.isSpaceOverlapping(
+        { long: 34.618952, lat: 31.314902 },
+        sickRecord
+      )
     ).toBe(false);
   });
 
   test('unitTestIntersectingRecords()', async () => {
-    fetch(config().dataUrl, { headers: { 'Content-Type': 'application/json;charset=utf-8' } })
-      .then(response => response.json())
+    fetch(config().dataUrl, {
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    })
+      .then((response) => response.json())
       .then(async (responseJson) => {
         const myData = [
           {
@@ -177,7 +196,7 @@ describe('Tracker', () => {
 
         const intersectingRecords = tracker.getIntersectingSickRecords(
           myData,
-          responseJson,
+          responseJson
         );
 
         expect(intersectingRecords.length).toEqual(2);
@@ -197,13 +216,19 @@ describe('Tracker', () => {
     sickDB.addSickRecord.mockReturnValueOnce(Promise.resolve(rows));
     sickDB.containsObjectID.mockReturnValueOnce(Promise.resolve(rows));
     // check he
-    await expect(tracker.onSickPeopleNotify(sickPeopleArray)).resolves.toEqual(undefined);
+    await expect(tracker.onSickPeopleNotify(sickPeopleArray)).resolves.toEqual(
+      undefined
+    );
     // check unsupported language
     NativeModules.SettingsManager.settings.AppleLocale = 'gh';
-    await expect(tracker.onSickPeopleNotify(sickPeopleArray)).resolves.toEqual(undefined);
+    await expect(tracker.onSickPeopleNotify(sickPeopleArray)).resolves.toEqual(
+      undefined
+    );
 
     constants.IS_IOS = false;
-    await expect(tracker.onSickPeopleNotify(sickPeopleArray)).resolves.toEqual(undefined);
+    await expect(tracker.onSickPeopleNotify(sickPeopleArray)).resolves.toEqual(
+      undefined
+    );
   });
 
   test('checkSickPeople() - good', async () => {
@@ -222,7 +247,7 @@ describe('Tracker', () => {
         accuracy: 10,
         long: 35.535289000000034,
         lat: 32.78675100000004,
-      }
+      },
     ];
 
     const responseJSON = {
@@ -233,10 +258,7 @@ describe('Tracker', () => {
           id: 1,
           geometry: {
             type: 'Point',
-            coordinates: [
-              34.901541,
-              32.132502
-            ]
+            coordinates: [34.901541, 32.132502],
           },
           properties: {
             OBJECTID: 1,
@@ -248,10 +270,10 @@ describe('Tracker', () => {
             fromTime: 1584468000000,
             toTime: 1584568740000,
             sourceOID: 1,
-            stayTimes: '18:00 - 10:00'
-          }
-        }
-      ]
+            stayTimes: '18:00 - 10:00',
+          },
+        },
+      ],
     };
     fetch.mockResponseOnce(JSON.stringify(responseJSON));
     userLocationDB.listSamples.mockReturnValueOnce(Promise.resolve(sampleData));
@@ -261,7 +283,7 @@ describe('Tracker', () => {
   test('checkSickPeople() - NoData', async () => {
     const userLocationDB = new db.UserLocationsDatabase();
     const responseJSON = {
-      features: 'asd'
+      features: 'asd',
     };
     fetch.mockResponseOnce(JSON.stringify(responseJSON));
     userLocationDB.listSamples.mockReturnValueOnce(Promise.resolve([]));

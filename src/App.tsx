@@ -28,8 +28,8 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT
-  }
+    height: SCREEN_HEIGHT,
+  },
 });
 
 export default App;

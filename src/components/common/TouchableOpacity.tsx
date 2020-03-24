@@ -1,16 +1,28 @@
 import React, { MutableRefObject, ReactNode } from 'react';
-import { AccessibilityState, TouchableOpacity as RNTouchableOpacity, TouchableOpacityProps } from 'react-native';
+import {
+  AccessibilityState,
+  TouchableOpacity as RNTouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 
 interface TouchableProps extends TouchableOpacityProps {
-  children?: ReactNode,
-  reference?: MutableRefObject <RNTouchableOpacity>,
-  expanded?: boolean,
-  checked?: boolean,
-  selected?: boolean,
+  children?: ReactNode;
+  reference?: MutableRefObject<RNTouchableOpacity>;
+  expanded?: boolean;
+  checked?: boolean;
+  selected?: boolean;
 }
 
 const TouchableOpacity = (props: TouchableProps) => {
-  const { children, reference, disabled, accessibilityRole, expanded, checked, selected } = props;
+  const {
+    children,
+    reference,
+    disabled,
+    accessibilityRole,
+    expanded,
+    checked,
+    selected,
+  } = props;
 
   const accessibilityState: AccessibilityState = {};
 
@@ -33,8 +45,7 @@ const TouchableOpacity = (props: TouchableProps) => {
       ref={reference}
       activeOpacity={0.6}
       accessibilityRole={accessibilityRole || 'button'}
-      accessibilityState={accessibilityState}
-    >
+      accessibilityState={accessibilityState}>
       {children}
     </RNTouchableOpacity>
   );

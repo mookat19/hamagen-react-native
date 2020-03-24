@@ -2,21 +2,34 @@ import React, { useRef, useState } from 'react';
 import { View, StyleSheet, Modal } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { ActionButton, Icon, TermsOfUse, Text } from '.';
-import { PADDING_TOP, SCREEN_HEIGHT, SCREEN_WIDTH, USAGE_ON_BOARDING } from '../../constants/Constants';
+import {
+  PADDING_TOP,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  USAGE_ON_BOARDING,
+} from '../../constants/Constants';
 
 interface Props {
-  isRTL: boolean,
-  strings: any,
-  isVisible: boolean,
-  onSeeTerms(): void,
-  onApprovedTerms(): void
+  isRTL: boolean;
+  strings: any;
+  isVisible: boolean;
+  onSeeTerms(): void;
+  onApprovedTerms(): void;
 }
 
-const ForceTerms = ({ isVisible, isRTL, strings, onSeeTerms, onApprovedTerms }: Props) => {
+const ForceTerms = ({
+  isVisible,
+  isRTL,
+  strings,
+  onSeeTerms,
+  onApprovedTerms,
+}: Props) => {
   const animRef = useRef<any>(null);
   const [isTOUAccepted, setIsTOUAccepted] = useState(false);
 
-  const { forceTerms: { title, desc, approve } } = strings;
+  const {
+    forceTerms: { title, desc, approve },
+  } = strings;
 
   const onPress = () => {
     if (!isTOUAccepted) {
@@ -31,12 +44,17 @@ const ForceTerms = ({ isVisible, isRTL, strings, onSeeTerms, onApprovedTerms }: 
       visible={isVisible}
       transparent
       animationType="slide"
-      onRequestClose={() => {}}
-    >
+      onRequestClose={() => {}}>
       <View style={styles.container}>
         <View style={{ alignItems: 'center' }}>
-          <Icon source={require('../../assets/main/noData.png')} width={115} customStyles={{ marginBottom: 25 }} />
-          <Text style={styles.title} bold>{title}</Text>
+          <Icon
+            source={require('../../assets/main/noData.png')}
+            width={115}
+            customStyles={{ marginBottom: 25 }}
+          />
+          <Text style={styles.title} bold>
+            {title}
+          </Text>
           <Text style={styles.text}>{desc}</Text>
         </View>
 
@@ -46,12 +64,19 @@ const ForceTerms = ({ isVisible, isRTL, strings, onSeeTerms, onApprovedTerms }: 
               isRTL={isRTL}
               strings={strings}
               value={isTOUAccepted}
-              onValueSelected={value => setIsTOUAccepted(value)}
+              onValueSelected={(value) => setIsTOUAccepted(value)}
               toggleWebview={onSeeTerms}
             />
           </Animatable.View>
 
-          <ActionButton text={approve} onPress={onPress} containerStyle={{ marginBottom: 20, opacity: isTOUAccepted ? 1 : 0.6 }} />
+          <ActionButton
+            text={approve}
+            onPress={onPress}
+            containerStyle={{
+              marginBottom: 20,
+              opacity: isTOUAccepted ? 1 : 0.6,
+            }}
+          />
         </View>
       </View>
     </Modal>
@@ -65,16 +90,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: PADDING_TOP(70),
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 22,
-    marginBottom: 15
+    marginBottom: 15,
   },
   text: {
     lineHeight: 20,
-    paddingHorizontal: 40
-  }
+    paddingHorizontal: 40,
+  },
 });
 
 export { ForceTerms };

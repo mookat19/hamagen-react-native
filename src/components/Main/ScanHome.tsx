@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, AppState, AppStateStatus, BackHandler, DeviceEventEmitter } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  AppState,
+  AppStateStatus,
+  BackHandler,
+  DeviceEventEmitter,
+} from 'react-native';
 import { connect } from 'react-redux';
 import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
 import { RESULTS } from 'react-native-permissions';
@@ -14,28 +21,49 @@ import ExposuresDetected from './ExposuresDetected';
 import NoExposures from './NoExposures';
 import ExposureInstructions from './ExposureInstructions';
 import { checkForceUpdate, toggleWebview } from '../../actions/GeneralActions';
-import { dismissExposure, removeValidExposure, setValidExposure } from '../../actions/ExposuresActions';
+import {
+  dismissExposure,
+  removeValidExposure,
+  setValidExposure,
+} from '../../actions/ExposuresActions';
 import { checkPermissions } from '../../services/LocationService';
 import { Exposure } from '../../types';
 
 interface Props {
-  navigation: any,
-  isRTL: boolean,
-  strings: any,
-  locale: 'he'|'en'|'ar'|'am'|'ru',
-  exposures: Exposure[],
-  validExposure: Exposure,
-  firstPoint?: undefined,
-  setValidExposure(exposure: Exposure): void,
-  removeValidExposure(): void,
-  dismissExposure(exposureId: number): void,
-  toggleWebview(isShow: boolean, usageType: string): void,
-  checkForceUpdate(): void
+  navigation: any;
+  isRTL: boolean;
+  strings: any;
+  locale: 'he' | 'en' | 'ar' | 'am' | 'ru';
+  exposures: Exposure[];
+  validExposure: Exposure;
+  firstPoint?: undefined;
+  setValidExposure(exposure: Exposure): void;
+  removeValidExposure(): void;
+  dismissExposure(exposureId: number): void;
+  toggleWebview(isShow: boolean, usageType: string): void;
+  checkForceUpdate(): void;
 }
 
-const ScanHome = ({ navigation, isRTL, strings, locale, exposures, validExposure, setValidExposure, removeValidExposure, dismissExposure, toggleWebview, firstPoint, checkForceUpdate }: Props) => {
+const ScanHome = ({
+  navigation,
+  isRTL,
+  strings,
+  locale,
+  exposures,
+  validExposure,
+  setValidExposure,
+  removeValidExposure,
+  dismissExposure,
+  toggleWebview,
+  firstPoint,
+  checkForceUpdate,
+}: Props) => {
   const appStateStatus = useRef<AppStateStatus>('active');
-  const [{ hasLocation, hasNetwork, hasGPS }, setIsConnected] = useState({ hasLocation: true, hasNetwork: true, hasGPS: true });
+  const [{ hasLocation, hasNetwork, hasGPS }, setIsConnected] = useState({
+    hasLocation: true,
+    hasNetwork: true,
+    hasGPS: true,
+  });
 
   useEffect(() => {
     setTimeout(() => {
@@ -50,11 +78,17 @@ const ScanHome = ({ navigation, isRTL, strings, locale, exposures, validExposure
       setIsConnected({ hasLocation, hasNetwork: state.isConnected, hasGPS });
     });
 
-    DeviceEventEmitter.addListener(RNSettings.GPS_PROVIDER_EVENT, handleGPSProviderEvent);
+    DeviceEventEmitter.addListener(
+      RNSettings.GPS_PROVIDER_EVENT,
+      handleGPSProviderEvent
+    );
 
     return () => {
       AppState.removeEventListener('change', onAppStateChange);
-      DeviceEventEmitter.removeListener(RNSettings.GPS_PROVIDER_EVENT, handleGPSProviderEvent);
+      DeviceEventEmitter.removeListener(
+        RNSettings.GPS_PROVIDER_EVENT,
+        handleGPSProviderEvent
+      );
     };
   }, []);
 
@@ -78,46 +112,72 @@ const ScanHome = ({ navigation, isRTL, strings, locale, exposures, validExposure
     const networkStatus = await NetInfo.fetch();
     const GPSStatus = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
 
-    setIsConnected({ hasLocation: locationPermission === RESULTS.GRANTED, hasNetwork: networkStatus.isConnected, hasGPS: GPSStatus === RNSettings.ENABLED });
+    setIsConnected({
+      hasLocation: locationPermission === RESULTS.GRANTED,
+      hasNetwork: networkStatus.isConnected,
+      hasGPS: GPSStatus === RNSettings.ENABLED,
+    });
   };
 
   const onAppStateChange = async (state: AppStateStatus) => {
     if (state === 'active' && appStateStatus.current !== 'active') {
       const locationPermission = await checkPermissions();
-      const GPSStatus = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
+      const GPSStatus = await RNSettings.getSetting(
+        RNSettings.LOCATION_SETTING
+      );
 
-      setIsConnected({ hasLocation: locationPermission === RESULTS.GRANTED, hasNetwork, hasGPS: GPSStatus === RNSettings.ENABLED });
+      setIsConnected({
+        hasLocation: locationPermission === RESULTS.GRANTED,
+        hasNetwork,
+        hasGPS: GPSStatus === RNSettings.ENABLED,
+      });
     }
 
     appStateStatus.current = state;
   };
 
   const handleGPSProviderEvent = (e: any) => {
-    setIsConnected({ hasLocation, hasNetwork, hasGPS: e[RNSettings.LOCATION_SETTING] === RNSettings.ENABLED });
+    setIsConnected({
+      hasLocation,
+      hasNetwork,
+      hasGPS: e[RNSettings.LOCATION_SETTING] === RNSettings.ENABLED,
+    });
   };
 
   const renderRelevantState = () => {
     if (validExposure) {
       return (
-        <ExposureInstructions isRTL={isRTL} strings={strings} locale={locale} exposure={validExposure} removeValidExposure={removeValidExposure} />
+        <ExposureInstructions
+          isRTL={isRTL}
+          strings={strings}
+          locale={locale}
+          exposure={validExposure}
+          removeValidExposure={removeValidExposure}
+        />
       );
-    } if (!hasLocation || !hasNetwork) {
-      return (
-        <NoData strings={strings} />
-      );
-    } if (exposures.length > 0) {
+    }
+    if (!hasLocation || !hasNetwork) {
+      return <NoData strings={strings} />;
+    }
+    if (exposures.length > 0) {
       return (
         <ExposuresDetected
           isRTL={isRTL}
           strings={strings}
           exposures={exposures}
-          onValidExposure={exposure => setValidExposure(exposure)}
-          dismissExposure={exposureId => dismissExposure(exposureId)}
+          onValidExposure={(exposure) => setValidExposure(exposure)}
+          dismissExposure={(exposureId) => dismissExposure(exposureId)}
         />
       );
     }
 
-    return <NoExposures strings={strings} toggleWebview={toggleWebview} firstPoint={firstPoint} />;
+    return (
+      <NoExposures
+        strings={strings}
+        toggleWebview={toggleWebview}
+        firstPoint={firstPoint}
+      />
+    );
   };
 
   return (
@@ -130,9 +190,7 @@ const ScanHome = ({ navigation, isRTL, strings, locale, exposures, validExposure
         goToExposureHistory={() => navigation.navigate('ExposuresHistory')}
       />
 
-      {
-        renderRelevantState()
-      }
+      {renderRelevantState()}
     </View>
   );
 };
@@ -140,28 +198,30 @@ const ScanHome = ({ navigation, isRTL, strings, locale, exposures, validExposure
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
-  }
+    backgroundColor: '#fff',
+  },
 });
 
 const mapStateToProps = (state: any) => {
   const {
     locale: { isRTL, strings, locale },
-    exposures: { exposures, validExposure, firstPoint }
+    exposures: { exposures, validExposure, firstPoint },
   } = state;
 
   return { isRTL, strings, locale, exposures, validExposure, firstPoint };
 };
 
-
 const mapDispatchToProps = (dispatch: any) => {
-  return bindActionCreators({
-    setValidExposure,
-    removeValidExposure,
-    dismissExposure,
-    toggleWebview,
-    checkForceUpdate
-  }, dispatch);
+  return bindActionCreators(
+    {
+      setValidExposure,
+      removeValidExposure,
+      dismissExposure,
+      toggleWebview,
+      checkForceUpdate,
+    },
+    dispatch
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScanHome);

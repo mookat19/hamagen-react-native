@@ -12,11 +12,16 @@ import { startSampling } from '../../services/SampleService';
 import { SCREEN_WIDTH, IS_FIRST_TIME } from '../../constants/Constants';
 
 interface Props {
-  navigation: any,
-  strings: any
+  navigation: any;
+  strings: any;
 }
 
-const AllSet = ({ navigation, strings: { allSet: { allGood } } }: Props) => {
+const AllSet = ({
+  navigation,
+  strings: {
+    allSet: { allGood },
+  },
+}: Props) => {
   useEffect(() => {
     setTimeout(() => {
       onboardingDoneActions();
@@ -60,7 +65,9 @@ const AllSet = ({ navigation, strings: { allSet: { allGood } } }: Props) => {
         autoPlay
         loop
       />
-      <Text style={styles.text} black>{allGood}</Text>
+      <Text style={styles.text} black>
+        {allGood}
+      </Text>
     </View>
   );
 };
@@ -70,21 +77,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   loader: {
     width: SCREEN_WIDTH / 2,
-    height: SCREEN_WIDTH / 2
+    height: SCREEN_WIDTH / 2,
   },
   text: {
     fontSize: 20,
-    marginTop: 30
-  }
+    marginTop: 30,
+  },
 });
 
 const mapStateToProps = (state: any) => {
   const {
-    locale: { strings }
+    locale: { strings },
   } = state;
 
   return { strings };
