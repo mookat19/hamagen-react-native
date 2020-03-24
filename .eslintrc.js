@@ -1,6 +1,6 @@
 module.exports = {
   extends: 'airbnb',
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   env: {
     'jest/globals': true,
   },
@@ -11,7 +11,7 @@ module.exports = {
     'import/extensions': 0,
     'react/jsx-filename-extension': [
       'error',
-      {extensions: ['.js', '.jsx', '.ts', '.tsx']},
+      { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     ],
     'comma-dangle': 0,
     'prefer-default-export': 0,
